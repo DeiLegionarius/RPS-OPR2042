@@ -13,4 +13,4 @@ def timedPrint(data, end="\n"):
     print(end)
         
         
-timedPrint(("test", 1))
+timedPrint(("", 1, ))
