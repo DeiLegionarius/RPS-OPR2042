@@ -18,7 +18,7 @@ def getForecast(url, lat, lon, days):
         "latitude":lat,
         "longitude":lon,
         "forecast_days":days,
-        "daily":"temperature_2m_mean,sunrise,sunset,rain"
+        "daily":"temperature_2m_mean,sunrise,sunset,rain_sum"
     }
     call = requests.get(url, params=params)
     print(call.url)
@@ -38,11 +38,16 @@ def getCityData(url, name, count):
 
 def betterInput(text:str, requiredtype:type, default=None):
     inp = None
-    while type(inp) != requiredtype:
+    safe = False
+    while not safe:
+        safe = True
         inp = input(text)
         if not default is None and inp=="":
             inp = default
             break
+        for char in inp:
+            if type(char) != requiredtype:
+                safe = False
     return requiredtype(inp)
             
 
