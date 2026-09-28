@@ -4,7 +4,7 @@ from time import sleep
 import random as rnd
 
 pin = Pin(27, Pin.OUT)
-np = neopixel.NeoPixel(pin, 50)
+np = neopixel.NeoPixel(pin, 60)
 
 COLOR = {
     "BLANK": (0, 0, 0),
@@ -126,9 +126,20 @@ def ruleta(div, speed, friction):
     while True:
         flash(np, ballpos, COLOR["WHITE"], C2, 0.2)
 
+def ura():
+    global np
+    i = 0
+    while True:
+        flush(np, COLOR["BLANK"])
+        np[i] = COLOR["WHITE"]
+        np.write()
+        i += 1
+        sleep(1)
+
 if __name__ == "__main__":
     # colors_flash()
-    divide = divide_pixels(np, 8)
+    # divide = divide_pixels(np, 8)
     # print(divide)
     # turn_periodically(divide)
-    ruleta(divide, rnd.randint(50, 120), (rnd.randint(1, 2000) * 0.001))
+    # ruleta(divide, rnd.randint(50, 120), (rnd.randint(1, 2000) * 0.001))
+    ura()
