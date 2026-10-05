@@ -1,0 +1,43 @@
+from machine import ADC, Pin
+from time import sleep
+import neopixel
+import random as rnd
+
+pot = ADC(Pin(34))
+pin = Pin(27, Pin.OUT)
+np = neopixel.NeoPixel(pin, 100)
+
+def kontrola_vrtenja(speed=1):
+    global np, pot
+    pos = 0
+    while True:
+        pos = 0 if pos == len(np) else pos
+        previous_pos = pos - 1 if pos != 0 else len(np) - 1
+        np[pos] = (255, 255, 255)
+        np[previous_pos] = (0, 0, 0)
+        pos += 1
+        np.write()
+        sleep(round((pot.read() / 4095) * speed, 2))
+
+def mutacija_barve():
+    global np, pot
+    barva = [rnd.randint(0, 255), rnd.randint(0, 255), rnd.randint(0, 255)]
+    i = 0
+    while True:
+        np[i] = barva
+        potval = pot.read()
+        barva[0] += int(round((potval / 4095) * 255))
+        barva[1] += int(round((potval / 4095) * 255))
+        barva[2] += int(round((potval / 4095) * 255))
+        for bb in range(len(barva)):
+            if barva[bb] > 255:
+                barva[bb] -= 255
+        np.write()
+        i += 1
+        if i == len(np):
+            i = 0
+        sleep(0.3)
+
+if __name__ == "__main__":
+    # kontrola_vrtenja()
+    mutacija_barve()

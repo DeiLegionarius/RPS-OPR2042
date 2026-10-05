@@ -1,9 +1,18 @@
 from machine import Pin
 import neopixel
 from time import sleep
+import random as rnd
 
 pin = Pin(27, Pin.OUT)
-np = neopixel.NeoPixel(pin, 16)
+np = neopixel.NeoPixel(pin, 60)
+
+COLOR = {
+    "BLANK": (0, 0, 0),
+    "WHITE": (255, 255, 255),
+    "RED": (255, 0, 0),
+    "GREEN": (0, 255, 0),
+    "BLUE": (0, 0, 255)
+}
 
 def divide_pixels(neo, sections):
     pixels = len(neo)
@@ -57,12 +66,80 @@ def turn_periodically(divide):
             i -= len(np)
         sleep(1)
         
-    
 
+def flash(np, val, color1, color2, delay):
+    np[val] = color1
+    np.write()
+    sleep(delay)
+    np[val] = color2
+    np.write()
+    sleep(delay)
 
+def ruletaBoard():
+    global np
+
+    flush(np, COLOR["BLANK"], write=True)
+    for i in range(len(np)):
+        if i == 0:
+            np[i] = COLOR["GREEN"]
+        elif i % 2 == 0:
+            np[i] = COLOR["RED"]
+        else:
+            np[i] = COLOR["BLANK"]
+    np.write()
+
+def ruleta(div, speed, friction):
+    global np
+
+    #speed *= len(np)
+    #friction *= len(np)
+
+    ruletaBoard()
+
+    ballpos = 0
+
+    while speed > 0:
+
+        if ballpos == 0:
+            np[ballpos] = COLOR["GREEN"]
+        elif ballpos % 2 == 0:
+            np[ballpos] = COLOR["RED"]
+        else:
+            np[ballpos] = COLOR["BLANK"]
+
+        ballpos = (ballpos + 1) % len(np)
+        np[ballpos] = COLOR["WHITE"]
+        np.write()
+        sleep_time = max(min(0.1 / (speed * 0.1), 1), 0.01)
+        print(f"speed={speed:.2f}, friction={friction:.4f}, sleep={sleep_time:.4f}")
+        sleep(sleep_time)
+        speed -= friction
+        friction += 0.01 / speed
+
+    if ballpos == 0:
+        C2 = COLOR["GREEN"]
+    elif ballpos % 2 == 0:
+        C2 = COLOR["RED"]
+    else:
+        C2 = COLOR["BLANK"]
+
+    while True:
+        flash(np, ballpos, COLOR["WHITE"], C2, 0.2)
+
+def ura():
+    global np
+    i = 0
+    while True:
+        flush(np, COLOR["BLANK"])
+        np[i] = COLOR["WHITE"]
+        np.write()
+        i += 1
+        sleep(1)
 
 if __name__ == "__main__":
     # colors_flash()
-    divide = divide_pixels(np, 8)
-    print(divide)
-    turn_periodically(divide)
+    # divide = divide_pixels(np, 8)
+    # print(divide)
+    # turn_periodically(divide)
+    # ruleta(divide, rnd.randint(50, 120), (rnd.randint(1, 2000) * 0.001))
+    ura()
