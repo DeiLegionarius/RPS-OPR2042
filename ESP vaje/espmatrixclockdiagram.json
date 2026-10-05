@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "author": "Anonymous maker",
+  "editor": "wokwi",
+  "parts": [
+    {
+      "type": "board-esp32-devkit-c-v4",
+      "id": "esp",
+      "top": 9.6,
+      "left": 52.84,
+      "attrs": { "env": "micropython-20260406-v1.28.0" }
+    },
+    {
+      "type": "wokwi-led-matrix",
+      "id": "matrix1",
+      "top": -175,
+      "left": -121,
+      "attrs": { "rows": "7", "cols": "23", "pixelShape": "square" }
+    },
+    { "type": "wokwi-potentiometer", "id": "pot1", "top": 8.3, "left": 163, "attrs": {} },
+    {
+      "type": "wokwi-pushbutton",
+      "id": "btn1",
+      "top": 28.7,
+      "left": 233.9,
+      "rotate": 90,
+      "attrs": { "color": "green", "xray": "1" }
+    }
+  ],
+  "connections": [
+    [ "esp:TX", "$serialMonitor:RX", "", [] ],
+    [ "esp:RX", "$serialMonitor:TX", "", [] ],
+    [ "pot1:GND", "esp:GND.1", "black", [ "v0" ] ],
+    [ "pot1:SIG", "esp:34", "green", [ "v0" ] ],
+    [ "pot1:VCC", "esp:3V3", "red", [ "v28.8", "h-144.95" ] ],
+    [ "btn1:2.r", "esp:GND.3", "green", [ "v0" ] ],
+    [ "btn1:1.r", "esp:33", "green", [ "v0" ] ],
+    [ "matrix1:DIN", "esp:27", "green", [ "v0" ] ],
+    [ "matrix1:VSS", "esp:GND.1", "green", [ "v0" ] ],
+    [ "matrix1:VDD", "esp:5V", "green", [ "v0" ] ]
+  ],
+  "dependencies": {}
+}
